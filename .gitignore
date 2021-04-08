@@ -1,0 +1,4 @@
+# Prerequisites
+CMakeList.txt
+/cmake-build-debug
+/.idea

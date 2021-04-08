@@ -1,0 +1,10 @@
+startTime
+finishTime
+startAddress
+finishAddress
+id
+customerID
+driverID
+isPicked
+carType
+description

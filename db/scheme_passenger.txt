@@ -1,0 +1,9 @@
+name
+rating
+orderHistory sep=*
+login
+password
+isWaiting
+paymentMethod (int)
+pinnedAddresses sep=*
+currentOrderID (-1 if no)

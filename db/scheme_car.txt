@@ -1,0 +1,7 @@
+model
+x
+y
+colour
+number
+carType
+freeBottleOfWater

@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "D:/InnoStudying/PSS/Labs/Hw4/test.cpp" "D:/InnoStudying/PSS/Labs/Hw4/cmake-build-debug/CMakeFiles/Hw4.dir/test.cpp.obj"
+  "D:/InnoStudying/PSS/pss_homeworks/test.cpp" "D:/InnoStudying/PSS/pss_homeworks/cmake-build-debug/CMakeFiles/Hw4.dir/test.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

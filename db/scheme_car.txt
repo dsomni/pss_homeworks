@@ -5,3 +5,4 @@ colour
 number
 carType
 freeBottleOfWater
+isValidated

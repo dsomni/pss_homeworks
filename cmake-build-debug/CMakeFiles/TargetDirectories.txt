@@ -1,3 +1,3 @@
-D:/InnoStudying/PSS/Labs/Hw4/cmake-build-debug/CMakeFiles/Hw4.dir
-D:/InnoStudying/PSS/Labs/Hw4/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/InnoStudying/PSS/Labs/Hw4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/InnoStudying/PSS/pss_homeworks/cmake-build-debug/CMakeFiles/Hw4.dir
+D:/InnoStudying/PSS/pss_homeworks/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/InnoStudying/PSS/pss_homeworks/cmake-build-debug/CMakeFiles/rebuild_cache.dir

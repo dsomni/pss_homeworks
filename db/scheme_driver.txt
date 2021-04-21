@@ -3,6 +3,7 @@ rating
 orderHistory sep=*
 login
 password
-carID (-1 if no)
+carIDs sep=*
 isWorking
 isInRide
+canAccept

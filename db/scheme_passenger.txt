@@ -7,3 +7,4 @@ isWaiting
 paymentMethod (int)
 pinnedAddresses sep=*
 currentOrderID (-1 if no)
+canOrder

@@ -20,6 +20,8 @@ public:
         COMFORT_PLUS,
         BUSINESS
     };
+    static inline const vector<string> carTypesNames = {"ECONOMY",
+                                                 "COMFORT", "COMFORT+", "BUSINESS"};
 private:
     string model;
     float x;
@@ -28,6 +30,7 @@ private:
     int number;
     types carType;
     int freeBottleOfWater = 20;
+    bool isValidated = false;
 
 public:
     Car(const string& model, const string& colour, int number, types carType, float x = 0, float y = 0){
@@ -52,6 +55,10 @@ public:
         return carType;
     }
 
+    string getCarTypeName(){
+        return carTypesNames[int(carType)];
+    }
+
     pair<float,float> getCoordinates(){
         this->x = rand();
         this->y = rand();
@@ -64,6 +71,10 @@ public:
 
     int getNumber(){
         return number;
+    }
+
+    bool getValidity(){
+        return isValidated;
     }
 
     // "Update" and "Set" methods
@@ -105,6 +116,10 @@ public:
             return true;
         }
         return false;
+    }
+
+    void setValidity(bool validity){
+        isValidated = validity;
     }
 
     // "Special" methods
@@ -218,7 +233,7 @@ public:
 };
 
 
-// Person Scheme (for Passengers & Drivers)
+// Person Scheme (for Passengers, Drivers & Admins)
 class Person{
 protected:
     string login;
@@ -227,6 +242,7 @@ protected:
     float rating;
     vector<Order> orderHistory;
     bool isWaiting = false;
+    bool orderAbility = true;
 
 public:
     Person(const string& name, float rating, vector<Order> orderHistory, const string& login, const string& password){
@@ -269,6 +285,10 @@ public:
         return name;
     }
 
+    bool getOrderAbility(){
+        return orderAbility;
+    }
+
     // "Update" and "Set" methods
     void updateOrderHistory(Order order){
         orderHistory.push_back(order);
@@ -281,28 +301,39 @@ public:
     void setRating(float rating){
         this->rating = (this->rating + rating)/2;
     }
+
+    void setOrderAbility(bool ability){
+        orderAbility = ability;
+    }
 };
 
 
 // Driver Scheme
 class Driver: public Person{
-    Car* car = nullptr;
+    vector<Car*> cars;
     bool isWorking= true;
     bool isInRide = false;
+    bool acceptAbility = true;
 
 public:
     Driver(const string &name, const string& login, const string& password, float rating, vector<Order> orderHistory,
-           Car* car) : Person(name, rating, orderHistory, login, password) {
+           vector<Car*> cars) : Person(name, rating, orderHistory, login, password) {
         this->name = name;
         this->rating = rating;
         this->orderHistory = move(orderHistory);
-        this->car = car;
+        this->cars = move(cars);
     }
     Driver(const string &name, const string& login, const string& password) :Person(name,login,password){}
 
     // "Get" methods
     Car* getCar(){
-        return car;
+        if(cars.size()>=0)
+            return cars[0];
+        return nullptr;
+    }
+
+    vector<Car*> getCars(){
+        return cars;
     }
 
     bool getWorkingStatus(){
@@ -314,7 +345,13 @@ public:
     }
 
     pair<float,float> getCoordinates(){
-        return car->getCoordinates();
+        if(cars.size()>=0)
+            return cars[0]->getCoordinates();
+        return make_pair(0,0);
+    }
+
+    bool getAcceptAbility(){
+        return acceptAbility;
     }
 
     // "Update" and "Set" methods
@@ -326,8 +363,20 @@ public:
         isInRide = newStatus;
     }
 
-    void setCar(Car* car){
-        this->car = car;
+    void setCars(vector<Car*> cars){
+        this->cars = move(cars);
+    }
+
+    void addCar(Car* car){
+        if(car== nullptr) return;
+        for(auto existing_car : this->cars)
+            if(existing_car!= nullptr && existing_car->getNumber() == car->getNumber())
+                return;
+        this->cars.push_back(car);
+    }
+
+    void setAcceptAbility(bool ability){
+        acceptAbility = ability;
     }
 };
 
@@ -402,4 +451,13 @@ public:
     void clearCurrentOrder(){
         this->currentOrder = nullptr;
     }
+};
+
+
+// Admin Scheme
+class Admin: public Person{
+
+public:
+
+    Admin(const string &name, const string& login, const string& password) :Person(name,login,password){}
 };

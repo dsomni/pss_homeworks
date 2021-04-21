@@ -11,6 +11,7 @@ using namespace std;
 ********************************************************/
 
 class DataBase{
+    const string adminsDir = "admins";
     const string driversDir = "drivers";
     const string carsDir = "cars";
     const string passengersDir = "passengers";
@@ -18,6 +19,7 @@ class DataBase{
 
     string dirName;
 
+    vector<string> adminsID;
     vector<string> carsID;
     vector<string> driversID;
     vector<string> orderID;
@@ -42,7 +44,7 @@ class DataBase{
 
     string getCollectionString(vector<string>& collection){
         string s;
-        for(auto el: collection){
+        for(const auto& el: collection){
             s+=el+"*";
         }
         if(!s.empty())
@@ -52,7 +54,7 @@ class DataBase{
 
     bool find_Order(vector<Order>& where, Order* what){
         for(auto el:where){
-            if(&el == what)
+            if(el.getID() == what->getID())
                 return true;
         }
         return false;
@@ -75,6 +77,8 @@ public:
         if (in.is_open())
         {
             if (getline(in, line))
+                split(line, adminsID);
+            if (getline(in, line))
                 split(line,carsID);
             if (getline(in, line))
                 split(line,driversID);
@@ -91,12 +95,179 @@ public:
         string line;
         ofstream out(dirName + "\\configs.txt");
         if (out.is_open()){
+            out << getCollectionString(adminsID) << endl;
             out << getCollectionString(carsID) << endl;
             out << getCollectionString(driversID) << endl;
             out << getCollectionString(orderID) << endl;
             out << getCollectionString(passengersID) << endl;
         }
         out.close();
+    }
+
+    // Get information about system state in string format
+    string getAllInformation(){
+        auto admins = getAllAdmins();
+        auto cars = getAllCars();
+        auto drivers = getAllDrivers();
+        auto orders = getAllOrders();
+        auto passengers = getAllPassengers();
+
+        string info;
+
+        info+= "Number of Admins: " + to_string(admins.size()) + "\nInfo about each admin:\n\n";
+        for(auto admin:admins){
+            info += "Name:\t\t\t" + admin->getName() + "\n";
+            info += "Login:\t\t\t" + admin->getLogin() + "\n";
+            info += "Password:\t\t" + admin->getPassword() + "\n";
+            info += "\n";
+        }
+        info += "\n";
+
+        info+= "Number of Cars: " + to_string(cars.size()) + "\nInfo about each car:\n";
+        for(auto car:cars){
+            info += "Model:\t\t\t" + car->getModel() + "\n";
+            info += "X:\t\t\t" + to_string(car->getCoordinates().first) + "\n";
+            info += "Y:\t\t\t" + to_string(car->getCoordinates().second) + "\n";
+            info += "CarType:\t\t" + car->getCarTypeName() + "\n";
+            info += "Number of bottles:\t" + to_string(car->getNumberFreeBottleOfWater()) + "\n";
+            info += "Is validated:\t\t" + to_string(car->getValidity()) + "\n";
+            info += "\n";
+        }
+        info += "\n";
+
+        info+= "Number of Drivers: " + to_string(drivers.size()) + "\nInfo about each driver:\n\n";
+        for(auto driver:drivers){
+            info += "Name:\t\t\t" + driver->getName() + "\n";
+            info += "Rating:\t\t\t" + to_string(driver->getRating()) + "\n";
+            info += "Orders:\n";
+            for(auto order: driver->getOrderHistory()){
+                info+="\t\t\t"+to_string(order.getID())+"\n";
+            }
+            info += "Login:\t\t\t" + driver->getLogin() + "\n";
+            info += "Password:\t\t" + driver->getPassword() + "\n";
+            info += "Cars:\n";
+            for(auto car: driver->getCars()){
+                info+="\t\t\t"+to_string(car->getNumber())+"\n";
+            }
+            info += "Working status:\t\t" + to_string(driver->getWorkingStatus()) + "\n";
+            info += "Riding status:\t\t" + to_string(driver->getRidingStatus()) + "\n";
+            info += "Can accept orders:\t" + to_string(driver->getAcceptAbility()) + "\n";
+            info += "\n";
+        }
+        info += "\n";
+
+        info+= "Number of Orders: " + to_string(orders.size()) + "\nInfo about each order:\n\n";
+        for(auto order:orders){
+            info += "Start Time:\t\t" + to_string(order->getStartTime()) + "\n";
+            info += "Finish Time:\t\t" + to_string(order->getFinishTime()) + "\n";
+            info += "Start Address:\t\t" + order->getStartAddress() + "\n";
+            info += "Finish Address:\t\t" + order->getFinishAddress() + "\n";
+            info += "ID:\t\t\t" + to_string(order->getID()) + "\n";
+            info += "Customer's id:\t\t" + order->getCustomerID() + "\n";
+            info += "Driver's id:\t\t" + order->getDriverID() + "\n";
+            info += "Picked Status:\t\t" + to_string(order->getPickedStatus()) + "\n";
+            info += "Type:\t\t\t" + Car::carTypesNames[int(order->getCarType())] + "\n";
+            info += "Description:\t\t" + order->getDescription() + "\n";
+            info += "\n";
+        }
+        info += "\n";
+
+        info+= "Number of Passengers: " + to_string(drivers.size()) + "\nInfo about each passenger:\n\n";
+        for(auto passenger:passengers){
+            info += "Name:\t\t\t" + passenger->getName() + "\n";
+            info += "Rating:\t\t\t" + to_string(passenger->getRating()) + "\n";
+            info += "Orders:\n";
+            for(auto order: passenger->getOrderHistory()){
+                info+="\t\t\t"+to_string(order.getID())+"\n";
+            }
+            info += "Login:\t\t\t" + passenger->getLogin() + "\n";
+            info += "Password:\t\t" + passenger->getPassword() + "\n";
+            info += "Waiting status:\t\t" + to_string(passenger->getWaitingStatus()) + "\n\n";
+            info += "Pinned addresses:\n";
+            for(const auto& address: passenger->getPinnedAddresses()){
+                info+="\t\t\t"+address+"\n";
+            }
+            info += "Current Order:\t\t" + ((passenger->getCurrentOrder()== nullptr)?"no":to_string(passenger->getCurrentOrder()->getID())) + "\n";
+            info += "Can make orders:\t" + to_string(passenger->getOrderAbility()) + "\n";
+            info += "\n";
+        }
+        info += "\n";
+
+        return info;
+    }
+
+
+    // Admins
+    // ****************************************************************
+
+    // Send Admin's data to DB
+    void updateAdmin(Admin* user){
+        if(user == nullptr) return;
+
+        readConfigs();
+        string line;
+
+        ofstream out(dirName + "\\" + adminsDir + "\\" + user->getLogin() + ".txt");
+        if (out.is_open()){
+            out << user->getName() << endl;
+
+            out << user->getLogin() << endl;
+            out << user->getPassword() << endl;
+        }
+        out.close();
+    }
+
+    // Create new Admin in DB
+    void addNewAdmin(Admin* user){
+        if(user == nullptr) return;
+
+        updateAdmin(user);
+        adminsID.push_back(user->getLogin());
+        updateConfigs();
+    }
+
+    // Get Admin's data from DB
+    Admin* getAdmin(const string& login, const string& password, bool checkPassword = true){
+        readConfigs();
+        string line;
+        ifstream in(dirName + "\\" + adminsDir + "\\" + login + ".txt");
+
+        if (in.is_open()){
+            string name_;
+            string login_;
+            string password_;
+
+            if (getline(in, line))
+                name_ = move(line);
+            if (getline(in, line))
+                login_ = move(line);
+            if (getline(in, line))
+                password_ = move(line);
+            if(checkPassword && password_!=password){
+                return nullptr;
+            }
+
+            auto* a= new Admin(name_,login_,password_);
+
+            in.close();
+            return a;
+        }else{
+            // Admin is not found
+            return nullptr;
+        }
+    }
+
+    // Returns all Admins from DB
+    vector<Admin*> getAllAdmins(){
+        readConfigs();
+        vector<Admin*> result;
+        Admin* a;
+        for(const auto& el : adminsID){
+            a = getAdmin(el,"",false);
+            if(a!= nullptr)
+                result.push_back(a);
+        }
+        return result;
     }
 
 
@@ -136,7 +307,6 @@ public:
             s="";
             for(const string& el: pA){
                 if(el.size()>1){
-                    //cout << el << endl;
                     s+=el+"*";
                 }
             }
@@ -148,6 +318,11 @@ public:
                 out << user->getCurrentOrder()->getID() << endl;
             else
                 out << "-1" << endl;
+
+            if(user->getOrderAbility())
+                out << "1" << endl;
+            else
+                out << "0" << endl;
         }
         out.close();
     }
@@ -177,6 +352,7 @@ public:
             vector<string> addresses_;
             int currentOrderID_ = -1;
             Order* order_;
+            bool canOrder_ = true;
 
             if (getline(in, line))
                 name_ = move(line);
@@ -212,6 +388,8 @@ public:
             }
             if (getline(in, line))
                 currentOrderID_ = stoi(line);
+            if (getline(in, line))
+                canOrder_ = stoi(line);
 
             auto* p= new Passenger(name_,login_,password_,rating_, orderHistory_,Passenger::CREDIT_CARD,addresses_);
             if(currentOrderID_!=-1){
@@ -221,6 +399,7 @@ public:
             }
             p->setPaymentMethods(paymentMethod_);
             p->setWaitingStatus(isWaiting_);
+            p->setOrderAbility(canOrder_);
 
             in.close();
             return p;
@@ -269,10 +448,14 @@ public:
             out << user->getLogin() << endl;
             out << user->getPassword() << endl;
 
-            if(user->getCar()!= nullptr)
-                out << user->getCar()->getNumber() << endl;
-            else
-                out << "-1" << endl;
+            s="";
+            for(auto car: user->getCars()){
+                if(car != nullptr)
+                    s+=to_string(car->getNumber()) + "*";
+            }
+            if(!s.empty())
+                s.pop_back();
+            out << s << endl;
 
             if(user->getWorkingStatus())
                 out << "1" << endl;
@@ -280,6 +463,11 @@ public:
                 out << "0" << endl;
 
             if(user->getRidingStatus())
+                out << "1" << endl;
+            else
+                out << "0" << endl;
+
+            if(user->getAcceptAbility())
                 out << "1" << endl;
             else
                 out << "0" << endl;
@@ -306,10 +494,11 @@ public:
             vector<Order> orderHistory_;
             string login_;
             string password_;
-            int carNumber_ = -1;
+            vector<string> carNumbers_;
             bool isWorking_ = true;
             bool isInRide_ = false;
             Order* order_;
+            bool canAccept_ = true;
 
             if (getline(in, line))
                 name_ = move(line);
@@ -332,15 +521,25 @@ public:
                 return nullptr;
             }
             if (getline(in, line))
-                carNumber_ = stoi(line);
+                split(line, carNumbers_);
             if (getline(in, line))
                 isWorking_ = stoi(line);
             if (getline(in, line))
                 isInRide_ = stoi(line);
+            if (getline(in, line))
+                canAccept_ = stoi(line);
 
-            auto* d= new Driver(name_,login_,password_,rating_, orderHistory_, getCar(to_string(carNumber_)));
+            vector<Car*> cars_;
+            Car* car_;
+            for(const auto& carNumber: carNumbers_){
+                car_ = getCar(carNumber);
+                if(car_!= nullptr)
+                    cars_.push_back(car_);
+            }
+            auto* d= new Driver(name_,login_,password_,rating_, orderHistory_, cars_);
             d->setRidingStatus(isInRide_);
             d->setWorkingStatus(isWorking_);
+            d->setAcceptAbility(canAccept_);
 
             in.close();
             return d;
@@ -384,6 +583,10 @@ public:
             out << to_string(car->getNumber()) << endl;
             out << car->getCarType() << endl;
             out << car->getNumberFreeBottleOfWater() << endl;
+            if(car->getValidity())
+                out << 1 << endl;
+            else
+                out << 0 << endl;
         }
         out.close();
     }
@@ -413,6 +616,7 @@ public:
             int number_ = stoi(number);
             int carType_ = 0;
             int freeBottleOfWater_ = 0;
+            bool validity_ = 0;
 
             if (getline(in, line))
                 model_ = move(line);
@@ -428,10 +632,13 @@ public:
                 carType_ = stoi(line);
             if (getline(in, line))
                 freeBottleOfWater_ = stoi(line);
+            if (getline(in, line))
+                validity_ = stoi(line);
 
             auto *car = new Car(model_, colour_, number_, Car::ECONOMY, x_, y_);
             car->setCarType(carType_);
             car->setNumberFreeBottleWater(freeBottleOfWater_);
+            car->setValidity(validity_);
 
             in.close();
             return car;
@@ -582,4 +789,5 @@ public:
         }
         return result;
     }
+
 };

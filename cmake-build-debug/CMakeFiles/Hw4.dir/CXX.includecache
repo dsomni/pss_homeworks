@@ -6,43 +6,43 @@
 
 #IncludeRegexTransform: 
 
-D:/InnoStudying/PSS/Labs/Hw4/DataBase.cpp
+D:/InnoStudying/PSS/pss_homeworks/DataBase.cpp
 iostream
 -
 vector
 -
-Schemes.cpp
-D:/InnoStudying/PSS/Labs/Hw4/Schemes.cpp
 fstream
 -
+Schemes.cpp
+D:/InnoStudying/PSS/pss_homeworks/Schemes.cpp
 
-D:/InnoStudying/PSS/Labs/Hw4/Gateways.cpp
-string
--
-vector
--
-time.h
--
-DataBase.cpp
-D:/InnoStudying/PSS/Labs/Hw4/DataBase.cpp
-
-D:/InnoStudying/PSS/Labs/Hw4/Schemes.cpp
+D:/InnoStudying/PSS/pss_homeworks/Gateways.cpp
 string
 -
 utility
 -
 vector
 -
-time.h
+ctime
+-
+DataBase.cpp
+D:/InnoStudying/PSS/pss_homeworks/DataBase.cpp
+
+D:/InnoStudying/PSS/pss_homeworks/Schemes.cpp
+string
+-
+utility
+-
+vector
 -
 
-D:/InnoStudying/PSS/Labs/Hw4/WendexTaxi.cpp
+D:/InnoStudying/PSS/pss_homeworks/WendexTaxi.cpp
 iostream
 -
 Gateways.cpp
-D:/InnoStudying/PSS/Labs/Hw4/Gateways.cpp
+D:/InnoStudying/PSS/pss_homeworks/Gateways.cpp
 
-D:/InnoStudying/PSS/Labs/Hw4/test.cpp
+D:/InnoStudying/PSS/pss_homeworks/test.cpp
 WendexTaxi.cpp
-D:/InnoStudying/PSS/Labs/Hw4/WendexTaxi.cpp
+D:/InnoStudying/PSS/pss_homeworks/WendexTaxi.cpp
 

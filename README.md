@@ -96,3 +96,5 @@ As a result we have `configs.txt` and mnogo drugih kostiley.
 Telegram: `@flip_floppa` (please, write me if you have questions!)
  
 Damn it, I forgot write something funny
+
+сори, не могу убрать из гита файлы IDE:((
